@@ -18,8 +18,9 @@ export function query(args: {
   after?: string;
   limit?: number;
   q?: string;
+  type?: string;
 }): Connection<Pokemon> {
-  const { after, q, limit = SIZE } = args;
+  const { after, q, limit = SIZE, type } = args;
 
   const filterByQ: (as: Pokemon[]) => Pokemon[] =
     // filter only if q is defined
@@ -39,9 +40,17 @@ export function query(args: {
             O.fold(() => as, idx => as.slice(idx))
           );
 
+  const filterByType : (as: Pokemon[]) => Pokemon[] = type === undefined ? 
+    identity : 
+    A.filter(p => p.types.map(y => y.toLowerCase()).includes((type||"").toLowerCase()) )
+
+    
+  
+
   const results: Pokemon[] = pipe(
     data,
     filterByQ,
+    filterByType, 
     sliceByAfter,
     // slicing limit + 1 because the `toConnection` function should known the connection size to determine if there are more results
     slice(0, limit + 1)
