@@ -9,6 +9,7 @@ import { Connection } from "../types";
 interface Pokemon {
   id: string;
   name: string;
+  classification: string;
   types: string[];
 }
 
@@ -40,17 +41,17 @@ export function query(args: {
             O.fold(() => as, idx => as.slice(idx))
           );
 
-  const filterByType : (as: Pokemon[]) => Pokemon[] = type === undefined ? 
-    identity : 
-    A.filter(p => p.types.map(y => y.toLowerCase()).includes((type||"").toLowerCase()) )
-
-    
-  
+  const filterByType: (as: Pokemon[]) => Pokemon[] =
+    type === undefined || type === ""
+      ? identity
+      : A.filter(p =>
+          p.types.map(y => y.toLowerCase()).includes((type || "").toLowerCase())
+        );
 
   const results: Pokemon[] = pipe(
     data,
     filterByQ,
-    filterByType, 
+    filterByType,
     sliceByAfter,
     // slicing limit + 1 because the `toConnection` function should known the connection size to determine if there are more results
     slice(0, limit + 1)

@@ -1,61 +1,73 @@
 import React, { useState } from "react";
 import "./App.css";
-import SearchInput from "./SearchInput";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import { Row, Col, Spin } from "antd";
+import { PokemonType } from "./type";
+import {
+  SearchInput,
+  PokemonTable,
+  RadioPokemonType,
+  NoPokemonFound
+} from "./component/";
 
-const App: React.FC = () => {
-  const [type, setType] = useState<string>("grass");
-  const [query, setQuery] = useState<string>("");
-
-  /*   const GET_POKEMON = gql`
-{
-  pokemonsByType:pokemonsByType(type:"${type}"){
-    edges{
-      cursor
-      node{
-        id
-        name
-        types
-      }
-    }
-  }
-  pokemons:pokemons(q:"${query}"){
-    edges{
-      cursor
-      node{
-        id
-        name
-        types
-      }
-    }
-  }
-}
-`; */
-
-  const GET_POKEMON = gql`
-    query {
-      pokemons: pokemons(q: "bulbasa", type: "grass") {
-        edges {
-          cursor
-          node {
-            id
-            name
-            types
-          }
+const GET_POKEMON = gql`
+  query($type: String, $query: String) {
+    pokemons(type: $type, q: $query) {
+      edges {
+        node {
+          id
+          classification
+          name
+          types
         }
       }
     }
-  `;
+  }
+`;
 
-  const { loading, error, data } = useQuery(GET_POKEMON);
+const App: React.FC = () => {
+  const [type, setType] = useState<PokemonType | undefined>();
+  const [query, setQuery] = useState<string | undefined>();
 
-  console.log({ loading, error, data });
+  const { loading, error, data } = useQuery(GET_POKEMON, {
+    variables: {
+      $type: type,
+      $query: (query || "").toString()
+    }
+  });
+
+  console.log({
+    type,
+    query,
+    loading,
+    error,
+    data
+  });
 
   return (
     <div className="App">
-      <SearchInput value={type} set={setType} />
-      <SearchInput value={query} set={setQuery} />
+      <Row gutter={[16, 16]}>
+        <Col span={8}>
+          <SearchInput
+            value={query}
+            set={setQuery}
+            placeholder="Search by name"
+          />
+          <RadioPokemonType query={type} setQuery={setType} />
+        </Col>
+        <Col span={16}>
+          {loading ? (
+            <Row type="flex" justify="center">
+              <Spin size="large" />
+            </Row>
+          ) : data.pokemons ? (
+            <PokemonTable data={data.pokemons.edges} />
+          ) : (
+            <NoPokemonFound />
+          )}
+        </Col>
+      </Row>
     </div>
   );
 };
