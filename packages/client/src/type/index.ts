@@ -1,5 +1,6 @@
 export interface Pokemon {
   node: {
+    id: string;
     name: string;
     classification: string;
     types: string[];
@@ -7,6 +8,7 @@ export interface Pokemon {
 }
 
 export interface PokemonRow {
+  id: string;
   name: string;
   classification: string;
   types: string;
@@ -18,7 +20,17 @@ export const PokemonType = {
   fire: "fire",
   flying: "flying",
   water: "water",
-  bug: "flying"
+  bug: "bug",
+  normal: "normal",
+  electric: "electric",
+  ground: "ground",
+  dragon: "dragon",
+  ice: "ice",
+  ghost: "ghost",
+  fairy: "fairy",
+  fighting: "fighting",
+  psychic: "psychic",
+  rock: "rock"
 } as const;
 
 export type PokemonType = typeof PokemonType[keyof typeof PokemonType];

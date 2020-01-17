@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
@@ -9,16 +9,21 @@ import {
   PokemonTable,
   RadioPokemonType,
   NoPokemonFound,
-  Header
+  Header,
+  ErrorAlert
 } from "./component/";
 
 const App: React.FC = () => {
   const [type, setType] = useState<PokemonType | undefined>();
   const [query, setQuery] = useState<string | undefined>("");
+  const [lastId, setLastId] = useState<string>("");
+  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false);
 
   const GET_POKEMON = gql`
   query{
-    pokemons(type: "${(type || "").toString()}", q: "${query}") {
+    pokemons(type: "${(
+      type || ""
+    ).toString()}", q: "${query}", after:"${lastId}") {
       edges {
         node {
           id
@@ -27,18 +32,29 @@ const App: React.FC = () => {
           types
         }
       }
+      pageInfo{
+        hasNextPage
+      }
     }
   }
 `;
 
   const { loading, error, data } = useQuery(GET_POKEMON);
 
+  useEffect(
+    () =>
+      data &&
+      data.pokemons &&
+      setHasNextPage(data.pokemons.pageInfo.hasNextPage),
+    [data]
+  );
+
   return (
     <>
       <Header />
       <div className="App">
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }}>
             <Row className="margin-bottom-medium">
               <SearchInput
                 value={query}
@@ -54,6 +70,7 @@ const App: React.FC = () => {
                 icon="undo"
                 onClick={() => {
                   setQuery("");
+                  setLastId("");
                   setType(undefined);
                 }}
               >
@@ -61,13 +78,19 @@ const App: React.FC = () => {
               </Button>
             </Row>
           </Col>
-          <Col span={16}>
-            {loading ? (
+          <Col xs={{ span: 24 }} md={{ span: 16 }}>
+            {error ? (
+              <ErrorAlert />
+            ) : !data && loading ? (
               <Row type="flex" justify="center">
                 <Spin size="large" />
               </Row>
             ) : data.pokemons ? (
-              <PokemonTable data={data.pokemons.edges} />
+              <PokemonTable
+                data={data.pokemons.edges}
+                hasNextPage={hasNextPage}
+                getLastId={(value: string) => setLastId(value)}
+              />
             ) : (
               <NoPokemonFound />
             )}
