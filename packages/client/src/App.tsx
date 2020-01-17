@@ -9,7 +9,8 @@ import {
   PokemonTable,
   RadioPokemonType,
   NoPokemonFound,
-  Header
+  Header,
+  ErrorAlert
 } from "./component/";
 
 const App: React.FC = () => {
@@ -27,12 +28,15 @@ const App: React.FC = () => {
           types
         }
       }
+      pageInfo{
+        hasNextPage
+      }
     }
   }
 `;
 
   const { loading, error, data } = useQuery(GET_POKEMON);
-
+  console.log(data);
   return (
     <>
       <Header />
@@ -62,7 +66,9 @@ const App: React.FC = () => {
             </Row>
           </Col>
           <Col span={16}>
-            {loading ? (
+            {error ? (
+              <ErrorAlert />
+            ) : loading ? (
               <Row type="flex" justify="center">
                 <Spin size="large" />
               </Row>
