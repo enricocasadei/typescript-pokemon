@@ -54,7 +54,7 @@ const App: React.FC = () => {
       <Header />
       <div className="App">
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }}>
             <Row className="margin-bottom-medium">
               <SearchInput
                 value={query}
@@ -78,7 +78,7 @@ const App: React.FC = () => {
               </Button>
             </Row>
           </Col>
-          <Col span={16}>
+          <Col xs={{ span: 24 }} md={{ span: 16 }}>
             {error ? (
               <ErrorAlert />
             ) : !data && loading ? (
