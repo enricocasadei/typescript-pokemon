@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
@@ -16,6 +16,7 @@ import {
 const App: React.FC = () => {
   const [type, setType] = useState<PokemonType | undefined>();
   const [query, setQuery] = useState<string | undefined>("");
+  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false);
 
   const GET_POKEMON = gql`
   query{
@@ -36,7 +37,15 @@ const App: React.FC = () => {
 `;
 
   const { loading, error, data } = useQuery(GET_POKEMON);
-  console.log(data);
+
+  useEffect(
+    () =>
+      data &&
+      data.pokemons &&
+      setHasNextPage(data.pokemons.pageInfo.hasNextPage),
+    [data]
+  );
+
   return (
     <>
       <Header />
@@ -68,12 +77,15 @@ const App: React.FC = () => {
           <Col span={16}>
             {error ? (
               <ErrorAlert />
-            ) : loading ? (
+            ) : !data && loading ? (
               <Row type="flex" justify="center">
                 <Spin size="large" />
               </Row>
             ) : data.pokemons ? (
-              <PokemonTable data={data.pokemons.edges} />
+              <PokemonTable
+                data={data.pokemons.edges}
+                hasNextPage={hasNextPage}
+              />
             ) : (
               <NoPokemonFound />
             )}
