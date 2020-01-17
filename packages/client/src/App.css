@@ -1,1 +1,27 @@
 @import "~antd/dist/antd.css";
+
+.App {
+  margin: 30px;
+  padding: 0px 0px 0px 0px;
+}
+
+.margin-bottom-xsmall {
+  margin-bottom: 8px;
+}
+
+.margin-bottom-small {
+  margin-bottom: 12px;
+}
+
+.margin-bottom,
+.margin-bottom-medium {
+  margin-bottom: 24px;
+}
+
+.margin-bottom-large {
+  margin-bottom: 36px;
+}
+
+.margin-bottom-xlarge {
+  margin-bottom: 48px;
+}
