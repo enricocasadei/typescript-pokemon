@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import "./App.css";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { Row, Col, Spin } from "antd";
+import { Row, Col, Spin, Button } from "antd";
 import { PokemonType } from "./type";
 import {
   SearchInput,
   PokemonTable,
   RadioPokemonType,
-  NoPokemonFound
+  NoPokemonFound,
+  Header
 } from "./component/";
 
-const GET_POKEMON = gql`
-  query($type: String, $query: String) {
-    pokemons(type: $type, q: $query) {
+const App: React.FC = () => {
+  const [type, setType] = useState<PokemonType | undefined>();
+  const [query, setQuery] = useState<string | undefined>("");
+
+  const GET_POKEMON = gql`
+  query{
+    pokemons(type: "${(type || "").toString()}", q: "${query}") {
       edges {
         node {
           id
@@ -26,49 +31,50 @@ const GET_POKEMON = gql`
   }
 `;
 
-const App: React.FC = () => {
-  const [type, setType] = useState<PokemonType | undefined>();
-  const [query, setQuery] = useState<string | undefined>();
-
-  const { loading, error, data } = useQuery(GET_POKEMON, {
-    variables: {
-      $type: type,
-      $query: (query || "").toString()
-    }
-  });
-
-  console.log({
-    type,
-    query,
-    loading,
-    error,
-    data
-  });
+  const { loading, error, data } = useQuery(GET_POKEMON);
 
   return (
-    <div className="App">
-      <Row gutter={[16, 16]}>
-        <Col span={8}>
-          <SearchInput
-            value={query}
-            set={setQuery}
-            placeholder="Search by name"
-          />
-          <RadioPokemonType query={type} setQuery={setType} />
-        </Col>
-        <Col span={16}>
-          {loading ? (
-            <Row type="flex" justify="center">
-              <Spin size="large" />
+    <>
+      <Header />
+      <div className="App">
+        <Row gutter={[16, 16]}>
+          <Col span={8}>
+            <Row className="margin-bottom-medium">
+              <SearchInput
+                value={query}
+                set={setQuery}
+                placeholder="Search by name"
+              />
             </Row>
-          ) : data.pokemons ? (
-            <PokemonTable data={data.pokemons.edges} />
-          ) : (
-            <NoPokemonFound />
-          )}
-        </Col>
-      </Row>
-    </div>
+            <Row className="margin-bottom-medium">
+              <RadioPokemonType query={type} setQuery={setType} />
+            </Row>
+            <Row className="margin-bottom-medium">
+              <Button
+                icon="undo"
+                onClick={() => {
+                  setQuery("");
+                  setType(undefined);
+                }}
+              >
+                Reset Filters
+              </Button>
+            </Row>
+          </Col>
+          <Col span={16}>
+            {loading ? (
+              <Row type="flex" justify="center">
+                <Spin size="large" />
+              </Row>
+            ) : data.pokemons ? (
+              <PokemonTable data={data.pokemons.edges} />
+            ) : (
+              <NoPokemonFound />
+            )}
+          </Col>
+        </Row>
+      </div>
+    </>
   );
 };
 
