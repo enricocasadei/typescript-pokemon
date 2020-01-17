@@ -50,16 +50,6 @@ export const PokemonTable = ({
   return (
     <>
       <Table
-        onRow={(record: PokemonRow) => {
-          return {
-            onClick: event => {
-              console.log(record, event);
-              fetch(
-                `https://pokeres.bastionbot.org/images/pokemon/${record.id}.png`
-              ).then(console.log);
-            }
-          };
-        }}
         pagination={false}
         rowKey="name"
         dataSource={data.map(mapToTable)}

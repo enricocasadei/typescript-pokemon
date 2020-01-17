@@ -85,7 +85,7 @@ const App: React.FC = () => {
               <Row type="flex" justify="center">
                 <Spin size="large" />
               </Row>
-            ) : data.pokemons ? (
+            ) : data.pokemons && data.pokemons.edges.length > 0 ? (
               <PokemonTable
                 data={data.pokemons.edges}
                 hasNextPage={hasNextPage}
