@@ -1,5 +1,5 @@
-import React from "react";
-import { Table } from "antd";
+import React, { useState, useCallback, useEffect } from "react";
+import { Table, Button } from "antd";
 import { Pokemon, PokemonRow } from "../type";
 
 const mapToTable = (pokemon: Pokemon): PokemonRow => ({
@@ -29,24 +29,37 @@ const columns = [
 
 export const PokemonTable = ({
   data,
-  hasNextPage
+  hasNextPage,
+  getLastId
 }: {
   data: Pokemon[];
   hasNextPage?: boolean;
+  getLastId: (val: string) => void;
 }) => {
-  /* const handlePaginationChange = e => {
-    const { value } = e.target;
-    
-      pagination value === 'none' ? false : { position: value },
-    
-  }; */
+  const [lastId, setLastId] = useState<string | undefined>();
+
+  useEffect(() => {
+    setLastId(data[data.length - 1].node.id);
+  }, [data]);
+
+  const emitLastId = useCallback(() => getLastId(lastId || ""), [
+    lastId,
+    getLastId
+  ]);
 
   return (
-    <Table
-      pagination={hasNextPage ? { position: "bottom" } : false}
-      rowKey="name"
-      dataSource={data.map(mapToTable)}
-      columns={columns}
-    />
+    <>
+      <Table
+        pagination={false}
+        rowKey="name"
+        dataSource={data.map(mapToTable)}
+        columns={columns}
+      />
+      {hasNextPage && (
+        <div style={{ margin: "24px auto", textAlign: "center" }}>
+          <Button onClick={emitLastId}>Load More</Button>
+        </div>
+      )}
+    </>
   );
 };

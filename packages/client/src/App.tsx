@@ -16,11 +16,14 @@ import {
 const App: React.FC = () => {
   const [type, setType] = useState<PokemonType | undefined>();
   const [query, setQuery] = useState<string | undefined>("");
+  const [lastId, setLastId] = useState<string>("");
   const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false);
 
   const GET_POKEMON = gql`
   query{
-    pokemons(type: "${(type || "").toString()}", q: "${query}") {
+    pokemons(type: "${(
+      type || ""
+    ).toString()}", q: "${query}", after:"${lastId}") {
       edges {
         node {
           id
@@ -67,6 +70,7 @@ const App: React.FC = () => {
                 icon="undo"
                 onClick={() => {
                   setQuery("");
+                  setLastId("");
                   setType(undefined);
                 }}
               >
@@ -85,6 +89,7 @@ const App: React.FC = () => {
               <PokemonTable
                 data={data.pokemons.edges}
                 hasNextPage={hasNextPage}
+                getLastId={(value: string) => setLastId(value)}
               />
             ) : (
               <NoPokemonFound />
