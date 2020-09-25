@@ -10,7 +10,7 @@ import {
   RadioPokemonType,
   NoPokemonFound,
   Header,
-  ErrorAlert
+  ErrorAlert,
 } from "./component/";
 
 const App: React.FC = () => {
@@ -49,6 +49,8 @@ const App: React.FC = () => {
     [data]
   );
 
+  console.log(query);
+
   return (
     <>
       <Header />
@@ -82,7 +84,7 @@ const App: React.FC = () => {
             {error ? (
               <ErrorAlert />
             ) : !data && loading ? (
-              <Row type="flex" justify="center">
+              <Row justify="center">
                 <Spin size="large" />
               </Row>
             ) : data.pokemons && data.pokemons.edges.length > 0 ? (
