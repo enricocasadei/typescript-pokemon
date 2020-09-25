@@ -5,23 +5,23 @@ import { PokemonType } from "../type";
 const radioStyle = {
   display: "block",
   height: "30px",
-  lineHeight: "30px"
+  lineHeight: "30px",
 };
 
 export const RadioPokemonType = ({
   query,
-  setQuery
+  setQuery,
 }: {
   query?: PokemonType;
-  setQuery: React.Dispatch<React.SetStateAction<PokemonType | undefined>>;
+  setQuery: (p?: PokemonType) => void;
 }) => (
   <Radio.Group
-    onChange={e => {
+    onChange={(e) => {
       setQuery(e.target.value);
     }}
     value={query}
   >
-    {Object.keys(PokemonType).map(el => (
+    {Object.keys(PokemonType).map((el) => (
       <Radio style={radioStyle} key={"Radio_" + el} value={el}>
         {el}
       </Radio>

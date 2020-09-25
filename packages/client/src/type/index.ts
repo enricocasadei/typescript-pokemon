@@ -43,3 +43,9 @@ export type PokemonTableInfo = {
     edges: Pokemon[];
   };
 };
+
+export type Filters = {
+  type?: PokemonType;
+  query: string;
+  lastId: string;
+};

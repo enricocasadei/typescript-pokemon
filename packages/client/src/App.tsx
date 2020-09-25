@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import "./App.css";
 import { gql, useQuery } from "@apollo/client";
 import { Row, Col, Button } from "antd";
-import { PokemonTableInfo, PokemonType } from "./type";
+import { Filters, PokemonTableInfo, PokemonType } from "./type";
 import {
   ApolloClient,
   ApolloProvider,
@@ -29,17 +29,13 @@ export default function App() {
   );
 }
 
-const MainContent: React.FC = () => {
-  const [type, setType] = useState<PokemonType | undefined>();
-  const [query, setQuery] = useState<string | undefined>("");
-  const [lastId, setLastId] = useState<string>("");
 
-  const GET_POKEMON = useMemo(
-    () => gql`
-  query{
-    pokemons(type: "${(
-      type || ""
-    ).toString()}", q: "${query}", after:"${lastId}") {
+const MainContent = () => {
+  const [filter, setFilter] = useState<Filters>({...emptyFilter})
+
+  const GET_POKEMON = gql`
+  query pokemons($lastId: ID, $query: String, $type: String ) {
+    pokemons(type: $type, q: $query, after: $lastId) {
       edges {
         node {
           id
@@ -53,11 +49,11 @@ const MainContent: React.FC = () => {
       }
     }
   }
-`,
-    [type, query, lastId]
-  );
+`;
 
-  const { loading, error, data } = useQuery<PokemonTableInfo>(GET_POKEMON);
+  const { loading, error, data } = useQuery<PokemonTableInfo>(GET_POKEMON, {
+    variables: { ...filter },
+  });
 
   return (
     <>
@@ -66,21 +62,19 @@ const MainContent: React.FC = () => {
         <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Row className="margin-bottom-medium">
             <SearchInput
-              value={query}
-              set={setQuery}
+              value={filter.query}
+              set={(q?:string)=>setFilter({...filter, query: q || ""})}
               placeholder="Search by name"
             />
           </Row>
           <Row className="margin-bottom-medium">
-            <RadioPokemonType query={type} setQuery={setType} />
+            <RadioPokemonType query={filter.type} setQuery={(q?:PokemonType)=>setFilter({...filter, type: q})} />
           </Row>
           <Row className="margin-bottom-medium">
             <Button
               icon="undo"
               onClick={() => {
-                setQuery("");
-                setLastId("");
-                setType(undefined);
+                setFilter({...emptyFilter})
               }}
             >
               Reset Filters
@@ -92,9 +86,15 @@ const MainContent: React.FC = () => {
           loading={loading}
           data={data}
           hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
-          setLastId={setLastId}
+          setLastId={(q:string)=>setFilter({...filter, query: q})}
         />
       </Row>
     </>
   );
 };
+
+const emptyFilter = {
+  type: undefined,
+  query:"",
+  lastId:""
+}
