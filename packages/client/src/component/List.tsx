@@ -20,15 +20,26 @@ export default function PokemonList({
   hasNextPage,
   setLastId,
 }: PokemonListProps) {
-  return (
-    <Col xs={{ span: 24 }} md={{ span: 16 }}>
-      {error ? (
+  if (error) {
+    return (
+      <Col xs={{ span: 24 }} md={{ span: 16 }}>
         <ErrorAlert />
-      ) : !data && loading ? (
+      </Col>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Col xs={{ span: 24 }} md={{ span: 16 }}>
         <Row justify="center">
           <Spin size="large" />
         </Row>
-      ) : data.pokemons && data.pokemons.edges.length > 0 ? (
+      </Col>
+    );
+  }
+  return (
+    <Col xs={{ span: 24 }} md={{ span: 16 }}>
+      {data && data.pokemons && data.pokemons.edges.length > 0 ? (
         <PokemonTable
           data={data.pokemons.edges}
           hasNextPage={hasNextPage}

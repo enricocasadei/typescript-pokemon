@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import "./App.css";
 import { gql, useQuery } from "@apollo/client";
-import { Row, Col, Spin, Button } from "antd";
+import { Row, Col, Button } from "antd";
 import { PokemonTableInfo, PokemonType } from "./type";
 import {
   ApolloClient,
@@ -11,9 +11,6 @@ import {
 } from "@apollo/client";
 import PokemonList from "./component/List";
 import { Header } from "./component/Header";
-import { ErrorAlert } from "./component/ErrorAlert";
-import { NoPokemonFound } from "./component/NoPokemonFound";
-import { PokemonTable } from "./component/PokemonTable";
 import { RadioPokemonType } from "./component/RadioPokemonType";
 import { SearchInput } from "./component/SearchInput";
 
