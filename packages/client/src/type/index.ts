@@ -15,22 +15,22 @@ export interface PokemonRow {
 }
 
 export const PokemonType = {
-  grass: "grass",
-  poison: "poison",
-  fire: "fire",
-  flying: "flying",
-  water: "water",
-  bug: "bug",
-  normal: "normal",
-  electric: "electric",
-  ground: "ground",
-  dragon: "dragon",
-  ice: "ice",
-  ghost: "ghost",
-  fairy: "fairy",
-  fighting: "fighting",
-  psychic: "psychic",
-  rock: "rock",
+  grass: 'grass',
+  poison: 'poison',
+  fire: 'fire',
+  flying: 'flying',
+  water: 'water',
+  bug: 'bug',
+  normal: 'normal',
+  electric: 'electric',
+  ground: 'ground',
+  dragon: 'dragon',
+  ice: 'ice',
+  ghost: 'ghost',
+  fairy: 'fairy',
+  fighting: 'fighting',
+  psychic: 'psychic',
+  rock: 'rock',
 } as const;
 
 export type PokemonType = typeof PokemonType[keyof typeof PokemonType];
@@ -45,7 +45,7 @@ export type PokemonTableInfo = {
 };
 
 export type Filters = {
-  type?: PokemonType;
+  type: PokemonType[];
   query: string;
   lastId: string;
 };

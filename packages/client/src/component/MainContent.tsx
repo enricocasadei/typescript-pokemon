@@ -3,9 +3,8 @@ import { Row, Col, Button } from 'antd';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Filters, PokemonTableInfo, PokemonType } from '../type';
-import './App.css';
 import PokemonList from './List';
-import { RadioPokemonType } from './RadioPokemonType';
+import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';
 import PokemonHeader from './PokemonHeader';
 
@@ -13,7 +12,7 @@ export const MainContent = () => {
   const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
 
   const GET_POKEMON = gql`
-    query pokemons($lastId: ID, $query: String, $type: String) {
+    query pokemons($lastId: ID, $query: String, $type: [String]) {
       pokemons(type: $type, q: $query, after: $lastId) {
         edges {
           node {
@@ -47,7 +46,10 @@ export const MainContent = () => {
             />
           </Row>
           <Row className="margin-bottom-medium">
-            <RadioPokemonType query={filter.type} setQuery={(q?: PokemonType) => setFilter({ ...filter, type: q })} />
+            <CheckboxPokemonType
+              query={filter.type}
+              setQuery={(q: PokemonType[]) => setFilter({ ...filter, type: q })}
+            />
           </Row>
           <Row className="margin-bottom-medium">
             <Button icon="undo" onClick={() => setFilter({ ...emptyFilter })}>
@@ -68,7 +70,7 @@ export const MainContent = () => {
 };
 
 const emptyFilter = {
-  type: undefined,
+  type: [],
   query: '',
   lastId: '',
 };

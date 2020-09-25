@@ -19,7 +19,7 @@ export function query(args: {
   after?: string;
   limit?: number;
   q?: string;
-  type?: string;
+  type?: string[];
 }): Connection<Pokemon> {
   const { after, q, limit = SIZE, type } = args;
 
@@ -27,25 +27,27 @@ export function query(args: {
     // filter only if q is defined
     q === undefined
       ? identity
-      : A.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+      : A.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
 
   const sliceByAfter: (as: Pokemon[]) => Pokemon[] =
     // filter only if q is defined
     after === undefined
       ? identity
-      : as =>
+      : (as) =>
           pipe(
             as,
-            A.findIndex(a => a.id === after),
-            O.map(a => a + 1),
-            O.fold(() => as, idx => as.slice(idx))
+            A.findIndex((a) => a.id === after),
+            O.map((a) => a + 1),
+            O.fold(() => as, (idx) => as.slice(idx))
           );
 
   const filterByType: (as: Pokemon[]) => Pokemon[] =
-    type === undefined || type === ""
+    type === undefined || type.length === 0
       ? identity
-      : A.filter(p =>
-          p.types.map(y => y.toLowerCase()).includes((type || "").toLowerCase())
+      : A.filter((p) =>
+          type
+            .map((x) => x.toLowerCase())
+            .every((y) => p.types.map((x) => x.toLowerCase()).includes(y))
         );
 
   const results: Pokemon[] = pipe(
