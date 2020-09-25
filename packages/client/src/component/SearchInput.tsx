@@ -20,4 +20,8 @@ export const SearchInput = ({ set, value, placeholder }: SearchProps) => (
 
 const throttleOnChange = (set: (v?: string) => void) => (
   e: React.ChangeEvent<HTMLInputElement>
-) => throttle(() => set(e.target.value), 500);
+) => throttle(setValue(set), 500)(e);
+
+const setValue = (set: (v?: string) => void) => (
+  e: React.ChangeEvent<HTMLInputElement>
+) => set(e.target.value);

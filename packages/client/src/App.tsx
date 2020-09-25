@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./App.css";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
@@ -19,7 +19,8 @@ const App: React.FC = () => {
   const [lastId, setLastId] = useState<string>("");
   const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false);
 
-  const GET_POKEMON = gql`
+  const GET_POKEMON = useMemo(
+    () => gql`
   query{
     pokemons(type: "${(
       type || ""
@@ -37,7 +38,9 @@ const App: React.FC = () => {
       }
     }
   }
-`;
+`,
+    [type, query, lastId]
+  );
 
   const { loading, error, data } = useQuery(GET_POKEMON);
 
@@ -48,8 +51,6 @@ const App: React.FC = () => {
       setHasNextPage(data.pokemons.pageInfo.hasNextPage),
     [data]
   );
-
-  console.log(query);
 
   return (
     <>
