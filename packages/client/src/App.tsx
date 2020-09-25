@@ -1,22 +1,17 @@
-import React, { useState, useMemo } from "react";
-import "./App.css";
-import { gql, useQuery } from "@apollo/client";
-import { Row, Col, Button } from "antd";
-import { Filters, PokemonTableInfo, PokemonType } from "./type";
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  HttpLink,
-} from "@apollo/client";
-import PokemonList from "./component/List";
-import { Header } from "./component/Header";
-import { RadioPokemonType } from "./component/RadioPokemonType";
-import { SearchInput } from "./component/SearchInput";
+import React, { useState } from 'react';
+import './App.css';
+import { gql, useQuery } from '@apollo/client';
+import { Row, Col, Button } from 'antd';
+import { Filters, PokemonTableInfo, PokemonType } from './type';
+import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
+import PokemonList from './component/List';
+import { Header } from './component/Header';
+import { RadioPokemonType } from './component/RadioPokemonType';
+import { SearchInput } from './component/SearchInput';
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:4000",
+    uri: 'http://localhost:4000',
   }),
   cache: new InMemoryCache(),
 });
@@ -29,27 +24,26 @@ export default function App() {
   );
 }
 
-
 const MainContent = () => {
-  const [filter, setFilter] = useState<Filters>({...emptyFilter})
+  const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
 
   const GET_POKEMON = gql`
-  query pokemons($lastId: ID, $query: String, $type: String ) {
-    pokemons(type: $type, q: $query, after: $lastId) {
-      edges {
-        node {
-          id
-          classification
-          name
-          types
+    query pokemons($lastId: ID, $query: String, $type: String) {
+      pokemons(type: $type, q: $query, after: $lastId) {
+        edges {
+          node {
+            id
+            classification
+            name
+            types
+          }
+        }
+        pageInfo {
+          hasNextPage
         }
       }
-      pageInfo{
-        hasNextPage
-      }
     }
-  }
-`;
+  `;
 
   const { loading, error, data } = useQuery<PokemonTableInfo>(GET_POKEMON, {
     variables: { ...filter },
@@ -63,20 +57,15 @@ const MainContent = () => {
           <Row className="margin-bottom-medium">
             <SearchInput
               value={filter.query}
-              set={(q?:string)=>setFilter({...filter, query: q || ""})}
+              set={(q?: string) => setFilter({ ...filter, query: q || '' })}
               placeholder="Search by name"
             />
           </Row>
           <Row className="margin-bottom-medium">
-            <RadioPokemonType query={filter.type} setQuery={(q?:PokemonType)=>setFilter({...filter, type: q})} />
+            <RadioPokemonType query={filter.type} setQuery={(q?: PokemonType) => setFilter({ ...filter, type: q })} />
           </Row>
           <Row className="margin-bottom-medium">
-            <Button
-              icon="undo"
-              onClick={() => {
-                setFilter({...emptyFilter})
-              }}
-            >
+            <Button icon="undo" onClick={() => setFilter({ ...emptyFilter })}>
               Reset Filters
             </Button>
           </Row>
@@ -86,7 +75,7 @@ const MainContent = () => {
           loading={loading}
           data={data}
           hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
-          setLastId={(q:string)=>setFilter({...filter, query: q})}
+          setLastId={(q: string) => setFilter({ ...filter, query: q })}
         />
       </Row>
     </>
@@ -95,6 +84,6 @@ const MainContent = () => {
 
 const emptyFilter = {
   type: undefined,
-  query:"",
-  lastId:""
-}
+  query: '',
+  lastId: '',
+};
