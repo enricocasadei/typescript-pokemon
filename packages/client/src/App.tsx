@@ -1,23 +1,41 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./App.css";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useQuery } from "@apollo/client";
 import { Row, Col, Spin, Button } from "antd";
-import { PokemonType } from "./type";
+import { PokemonTableInfo, PokemonType } from "./type";
 import {
-  SearchInput,
-  PokemonTable,
-  RadioPokemonType,
-  NoPokemonFound,
-  Header,
-  ErrorAlert,
-} from "./component/";
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  HttpLink,
+} from "@apollo/client";
+import PokemonList from "./component/List";
+import { Header } from "./component/Header";
+import { ErrorAlert } from "./component/ErrorAlert";
+import { NoPokemonFound } from "./component/NoPokemonFound";
+import { PokemonTable } from "./component/PokemonTable";
+import { RadioPokemonType } from "./component/RadioPokemonType";
+import { SearchInput } from "./component/SearchInput";
 
-const App: React.FC = () => {
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: "http://localhost:4000",
+  }),
+  cache: new InMemoryCache(),
+});
+
+export default function App() {
+  return (
+    <ApolloProvider client={client}>
+      <MainContent />
+    </ApolloProvider>
+  );
+}
+
+const MainContent: React.FC = () => {
   const [type, setType] = useState<PokemonType | undefined>();
   const [query, setQuery] = useState<string | undefined>("");
   const [lastId, setLastId] = useState<string>("");
-  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(false);
 
   const GET_POKEMON = useMemo(
     () => gql`
@@ -42,66 +60,44 @@ const App: React.FC = () => {
     [type, query, lastId]
   );
 
-  const { loading, error, data } = useQuery(GET_POKEMON);
-
-  useEffect(
-    () =>
-      data &&
-      data.pokemons &&
-      setHasNextPage(data.pokemons.pageInfo.hasNextPage),
-    [data]
-  );
+  const { loading, error, data } = useQuery<PokemonTableInfo>(GET_POKEMON);
 
   return (
     <>
       <Header />
-      <div className="App">
-        <Row gutter={[16, 16]}>
-          <Col xs={{ span: 24 }} md={{ span: 8 }}>
-            <Row className="margin-bottom-medium">
-              <SearchInput
-                value={query}
-                set={setQuery}
-                placeholder="Search by name"
-              />
-            </Row>
-            <Row className="margin-bottom-medium">
-              <RadioPokemonType query={type} setQuery={setType} />
-            </Row>
-            <Row className="margin-bottom-medium">
-              <Button
-                icon="undo"
-                onClick={() => {
-                  setQuery("");
-                  setLastId("");
-                  setType(undefined);
-                }}
-              >
-                Reset Filters
-              </Button>
-            </Row>
-          </Col>
-          <Col xs={{ span: 24 }} md={{ span: 16 }}>
-            {error ? (
-              <ErrorAlert />
-            ) : !data && loading ? (
-              <Row justify="center">
-                <Spin size="large" />
-              </Row>
-            ) : data.pokemons && data.pokemons.edges.length > 0 ? (
-              <PokemonTable
-                data={data.pokemons.edges}
-                hasNextPage={hasNextPage}
-                getLastId={(value: string) => setLastId(value)}
-              />
-            ) : (
-              <NoPokemonFound />
-            )}
-          </Col>
-        </Row>
-      </div>
+      <Row gutter={[16, 16]}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Row className="margin-bottom-medium">
+            <SearchInput
+              value={query}
+              set={setQuery}
+              placeholder="Search by name"
+            />
+          </Row>
+          <Row className="margin-bottom-medium">
+            <RadioPokemonType query={type} setQuery={setType} />
+          </Row>
+          <Row className="margin-bottom-medium">
+            <Button
+              icon="undo"
+              onClick={() => {
+                setQuery("");
+                setLastId("");
+                setType(undefined);
+              }}
+            >
+              Reset Filters
+            </Button>
+          </Row>
+        </Col>
+        <PokemonList
+          error={error}
+          loading={loading}
+          data={data}
+          hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
+          setLastId={setLastId}
+        />
+      </Row>
     </>
   );
 };
-
-export default App;

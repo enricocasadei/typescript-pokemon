@@ -30,7 +30,16 @@ export const PokemonType = {
   fairy: "fairy",
   fighting: "fighting",
   psychic: "psychic",
-  rock: "rock"
+  rock: "rock",
 } as const;
 
 export type PokemonType = typeof PokemonType[keyof typeof PokemonType];
+
+export type PokemonTableInfo = {
+  pokemons: {
+    pageInfo: {
+      hasNextPage: boolean;
+    };
+    edges: Pokemon[];
+  };
+};
