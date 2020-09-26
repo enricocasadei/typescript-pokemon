@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
-import { MainContent } from './component/MainContent';
+import Main from './component/Main';
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -13,7 +13,7 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <MainContent />
+      <Main />
     </ApolloProvider>
   );
 }

@@ -8,7 +8,7 @@ import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';
 import PokemonHeader from './PokemonHeader';
 
-export const MainContent = () => {
+export default function ListController() {
   const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
 
   const GET_POKEMON = gql`

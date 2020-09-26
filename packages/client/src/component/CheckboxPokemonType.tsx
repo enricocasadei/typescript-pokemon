@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Row } from 'antd';
+import { Checkbox, Row, Typography } from 'antd';
 import { PokemonType } from '../type';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 
@@ -8,6 +8,8 @@ const radioStyle = {
   height: '30px',
   lineHeight: '30px',
 };
+
+const { Text } = Typography;
 
 export const CheckboxPokemonType = ({
   query = [],
@@ -18,7 +20,7 @@ export const CheckboxPokemonType = ({
 }) => (
   <Checkbox.Group>
     {Object.keys(PokemonType).map(el => (
-      <Row>
+      <Row key={'type_checkbox_' + el}>
         <Checkbox
           onChange={(e: CheckboxChangeEvent) => {
             if (e.target.checked) {
@@ -29,10 +31,9 @@ export const CheckboxPokemonType = ({
           }}
           checked={query.includes(el as PokemonType)}
           style={radioStyle}
-          key={'Radio_' + el}
           value={el}
         >
-          {el}
+          <Text>{el}</Text>
         </Checkbox>
       </Row>
     ))}
