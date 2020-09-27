@@ -1,12 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, PageHeader } from 'antd';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Filters, PokemonTableInfo, PokemonType } from '../type';
 import PokemonList from './List';
 import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';
-import PokemonHeader from './PokemonHeader';
 
 export default function ListController() {
   const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
@@ -35,7 +34,7 @@ export default function ListController() {
 
   return (
     <>
-      <PokemonHeader />
+      <PageHeader title="Pokemon List" />
       <Row gutter={[16, 16]}>
         <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Row className="margin-bottom-medium">
@@ -67,7 +66,7 @@ export default function ListController() {
       </Row>
     </>
   );
-};
+}
 
 const emptyFilter = {
   type: [],
