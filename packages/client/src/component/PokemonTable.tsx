@@ -38,6 +38,7 @@ const columns = [
           content={<img alt={`${record.name}`} src={`/images/${record.id}.png`} />}
           title={`${record.name}`}
           trigger="click"
+          placement="topRight"
         >
           <img width="56px" alt={`${record.name}`} src={`/sprites/${record.id}MS.png`} />
         </Popover>

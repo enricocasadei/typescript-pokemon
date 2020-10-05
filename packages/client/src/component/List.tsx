@@ -15,13 +15,8 @@ export default function PokemonList({ error, loading, data }: PokemonListProps) 
   if (error) {
     return <ErrorAlert />;
   }
-  return (
-    <>
-      {data && data.pokemons && data.pokemons.edges.length > 0 ? (
-        <PokemonTable loading={loading} data={data.pokemons.edges} />
-      ) : (
-        <NoPokemonFound />
-      )}
-    </>
-  );
+  if (data?.pokemons.edges.length === 0 && loading === false) {
+    return <NoPokemonFound />;
+  }
+  return <PokemonTable loading={loading} data={data?.pokemons.edges || []} />;
 }

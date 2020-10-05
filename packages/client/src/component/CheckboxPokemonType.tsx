@@ -18,21 +18,15 @@ export const CheckboxPokemonType = ({
   query?: PokemonType[];
   setQuery: (p: PokemonType[]) => void;
 }) => (
-  <Checkbox.Group>
+  <Checkbox.Group
+    style={{ width: '100%' }}
+    onChange={checkedValues => {
+      setQuery(checkedValues as PokemonType[]);
+    }}
+  >
     {Object.keys(PokemonType).map(el => (
       <Row key={'type_checkbox_' + el}>
-        <Checkbox
-          onChange={(e: CheckboxChangeEvent) => {
-            if (e.target.checked) {
-              setQuery([...query, el as PokemonType]);
-            } else {
-              setQuery(query.filter(item => item !== el));
-            }
-          }}
-          checked={query.includes(el as PokemonType)}
-          style={radioStyle}
-          value={el}
-        >
+        <Checkbox style={radioStyle} value={el}>
           <Text>{el}</Text>
         </Checkbox>
       </Row>
