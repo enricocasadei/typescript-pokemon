@@ -1,19 +1,45 @@
-import React from 'react';
-import { Popover } from 'antd';
+import React, { useState } from 'react';
+import { Drawer, Typography, Row, Col } from 'antd';
 import { Pokemon, PokemonRow } from '../type';
 import VirtualTable from './VirtualTable';
 
+const { Text } = Typography;
+
 export const PokemonTable = ({ data, loading }: { data: Pokemon[]; loading: boolean }) => {
+  const [drawer, setDrawer] = useState<{ open: boolean; record?: PokemonRow }>({ open: false, record: undefined });
   return (
-    <VirtualTable<PokemonRow>
-      loading={loading}
-      scroll={{ y: 456, x: '80%' }}
-      pagination={false}
-      rowKey="name"
-      dataSource={data.map(mapToTable)}
-      columns={columns}
-      title={() => `Found ${data.length} Pokemon`}
-    />
+    <>
+      <VirtualTable<PokemonRow>
+        loading={loading}
+        scroll={{ y: 456, x: '80%' }}
+        pagination={false}
+        rowKey="name"
+        dataSource={data.map(mapToTable)}
+        columns={columns}
+        title={() => `Found ${data.length} Pokemon`}
+        onRowClick={record => {
+          setDrawer({ open: true, record });
+        }}
+      />
+      <Drawer onClose={() => setDrawer({ open: false })} width={640} placement="right" visible={drawer.open}>
+        {drawer.record && (
+          <Row>
+            <Col>
+              <Text style={{ fontWeight: 'bold' }}>{drawer.record.name}</Text>
+            </Col>
+            <Col>
+              <Text>{drawer.record.classification}</Text>
+            </Col>
+            <Col>
+              <Text>{drawer.record.types}</Text>
+            </Col>
+            <Col>
+              <img alt={`${drawer.record.name}`} src={`/images/${drawer.record.id}.png`} />
+            </Col>
+          </Row>
+        )}
+      </Drawer>
+    </>
   );
 };
 
@@ -32,18 +58,9 @@ const columns = [
     key: 'sprite',
     width: 86,
     textAlign: 'center',
-    render: (text: any, record: PokemonRow, index: number) => {
-      return (
-        <Popover
-          content={<img alt={`${record.name}`} src={`/images/${record.id}.png`} />}
-          title={`${record.name}`}
-          trigger="click"
-          placement="topRight"
-        >
-          <img width="56px" alt={`${record.name}`} src={`/sprites/${record.id}MS.png`} />
-        </Popover>
-      );
-    },
+    render: (text: any, record: PokemonRow, index: number) => (
+      <img width="56px" alt={`${record.name}`} src={`/sprites/${record.id}MS.png`} />
+    ),
   },
   {
     title: 'Name',
