@@ -36,7 +36,7 @@ export default function ListController() {
     <>
       <PageHeader title="Pokemon List" />
       <Row gutter={[16, 16]}>
-        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 4 }}>
           <Row className="margin-bottom-medium">
             <SearchInput
               value={filter.query}
@@ -56,13 +56,15 @@ export default function ListController() {
             </Button>
           </Row>
         </Col>
-        <PokemonList
-          error={error}
-          loading={loading}
-          data={data}
-          hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
-          setLastId={(q: string) => setFilter({ ...filter, query: q })}
-        />
+        <Col xs={{ span: 24 }} md={{ span: 20 }}>
+          <PokemonList
+            error={error}
+            loading={loading}
+            data={data}
+            hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
+            setLastId={(q: string) => setFilter({ ...filter, query: q })}
+          />
+        </Col>
       </Row>
     </>
   );

@@ -1,9 +1,9 @@
-import { Row, Col, Spin } from "antd";
-import React from "react";
-import { ApolloError } from "@apollo/client/errors";
-import { ErrorAlert } from "./ErrorAlert";
-import { NoPokemonFound } from "./NoPokemonFound";
-import { PokemonTable } from "./PokemonTable";
+import { Row, Col, Spin } from 'antd';
+import React from 'react';
+import { ApolloError } from '@apollo/client/errors';
+import { ErrorAlert } from './ErrorAlert';
+import { NoPokemonFound } from './NoPokemonFound';
+import { PokemonTable } from './PokemonTable';
 
 type PokemonListProps = {
   error: ApolloError | undefined;
@@ -13,32 +13,20 @@ type PokemonListProps = {
   setLastId: (id: string) => void;
 };
 
-export default function PokemonList({
-  error,
-  loading,
-  data,
-  hasNextPage,
-  setLastId,
-}: PokemonListProps) {
+export default function PokemonList({ error, loading, data, hasNextPage, setLastId }: PokemonListProps) {
   if (error) {
-    return (
-      <Col xs={{ span: 24 }} md={{ span: 16 }}>
-        <ErrorAlert />
-      </Col>
-    );
+    return <ErrorAlert />;
   }
 
   if (loading) {
     return (
-      <Col xs={{ span: 24 }} md={{ span: 16 }}>
-        <Row justify="center">
-          <Spin size="large" />
-        </Row>
-      </Col>
+      <Row justify="center">
+        <Spin size="large" />
+      </Row>
     );
   }
   return (
-    <Col xs={{ span: 24 }} md={{ span: 16 }}>
+    <>
       {data && data.pokemons && data.pokemons.edges.length > 0 ? (
         <PokemonTable
           data={data.pokemons.edges}
@@ -48,6 +36,6 @@ export default function PokemonList({
       ) : (
         <NoPokemonFound />
       )}
-    </Col>
+    </>
   );
 }
