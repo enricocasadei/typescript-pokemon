@@ -1,4 +1,3 @@
-import { Row, Col, Spin } from 'antd';
 import React from 'react';
 import { ApolloError } from '@apollo/client/errors';
 import { ErrorAlert } from './ErrorAlert';

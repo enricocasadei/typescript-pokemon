@@ -33,8 +33,12 @@ const columns = [
     textAlign: 'center',
     render: (text: any, record: PokemonRow, index: number) => {
       return (
-        <Popover content={<img src={`/images/${record.id}.png`} />} title={`${record.name}`} trigger="click">
-          <img width="56px" src={`/sprites/${record.id}MS.png`} />
+        <Popover
+          content={<img alt={`${record.name}`} src={`/images/${record.id}.png`} />}
+          title={`${record.name}`}
+          trigger="click"
+        >
+          <img width="56px" alt={`${record.name}`} src={`/sprites/${record.id}MS.png`} />
         </Popover>
       );
     },

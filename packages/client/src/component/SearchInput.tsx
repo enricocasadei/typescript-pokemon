@@ -17,7 +17,7 @@ export const SearchInput = ({ set, value, placeholder }: SearchProps) => {
   );
   useEffect(() => {
     delayedSet(v);
-  }, [v]);
+  }, [v, delayedSet]);
 
   return (
     <Input
