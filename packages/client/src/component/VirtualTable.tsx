@@ -20,19 +20,6 @@ interface VirtualTableProps<T> extends TableProps<T> {
 
 export default function VirtualTable<T>(props: VirtualTableProps<T>) {
   const { columns, scroll } = props;
-  const [tableWidth, setTableWidth] = useState(0);
-
-  const widthColumnCount = columns.filter(({ width }) => !width).length;
-  const mergedColumns = columns.map(column => {
-    if (column.width) {
-      return column;
-    }
-
-    return {
-      ...column,
-      width: Math.floor(tableWidth / widthColumnCount),
-    };
-  });
 
   const gridRef = useRef<any | undefined>();
   const [connectObject] = useState<any>(() => {
@@ -57,8 +44,6 @@ export default function VirtualTable<T>(props: VirtualTableProps<T>) {
       });
   };
 
-  useEffect(() => resetVirtualGrid, [tableWidth]);
-
   const renderVirtualList = (rawData: any[], { scrollbarSize, ref, onScroll }: any) => {
     ref.current = connectObject;
     const totalHeight = rawData.length * 54;
@@ -67,19 +52,24 @@ export default function VirtualTable<T>(props: VirtualTableProps<T>) {
       <Grid
         ref={gridRef}
         className="virtual-grid"
-        columnCount={mergedColumns.length}
+        columnCount={columns.length}
         columnWidth={index => {
-          const { width } = mergedColumns[index];
-          if (typeof width === 'number') {
-            return totalHeight > scroll.y && index === mergedColumns.length - 1 ? width - scrollbarSize - 1 : width;
+          const { width } = columns[index];
+          console.log(width);
+          if (width) {
+            if (typeof width === 'number') {
+              return totalHeight > scroll.y && index === columns.length - 1 ? width - scrollbarSize - 1 : width;
+            } else {
+              console.log(parseInt(width));
+            }
           }
 
-          return 0;
+          return 108;
         }}
         height={scroll.y}
         rowCount={rawData.length}
         rowHeight={() => 54}
-        width={tableWidth}
+        width={108 * 4}
         onScroll={({ scrollLeft }) => {
           onScroll({ scrollLeft });
         }}
@@ -87,11 +77,11 @@ export default function VirtualTable<T>(props: VirtualTableProps<T>) {
         {({ columnIndex, rowIndex, style }) => (
           <div
             className={classNames('virtual-table-cell', {
-              'virtual-table-cell-last': columnIndex === mergedColumns.length - 1,
+              'virtual-table-cell-last': columnIndex === columns.length - 1,
             })}
             style={style}
           >
-            {rawData[rowIndex][mergedColumns[columnIndex].dataIndex]}
+            {rawData[rowIndex][columns[columnIndex].dataIndex]}
           </div>
         )}
       </Grid>
@@ -101,13 +91,13 @@ export default function VirtualTable<T>(props: VirtualTableProps<T>) {
   return (
     <ResizeObserver
       onResize={({ width }) => {
-        setTableWidth(width);
+        console.log(width);
       }}
     >
       <Table
         {...props}
         className="virtual-table"
-        columns={mergedColumns}
+        columns={columns}
         pagination={false}
         components={{
           body: renderVirtualList as any,

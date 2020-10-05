@@ -23,7 +23,7 @@ export const PokemonTable = ({
   return (
     <>
       <VirtualTable<PokemonRow>
-        scroll={{ y: 300, x: '100vw' }}
+        scroll={{ y: 456, x: '100vw' }}
         pagination={false}
         rowKey="name"
         dataSource={data.map(mapToTable)}
@@ -51,7 +51,7 @@ const columns = [
     title: 'Sprite',
     dataIndex: 'sprite',
     key: 'sprite',
-    width: '56px',
+    width: '66px',
     textAlign: 'center',
     render: (text: any, record: PokemonRow, index: number) => {
       return (
@@ -65,15 +65,18 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
+    width: '108px',
   },
   {
     title: 'Classification',
     dataIndex: 'classification',
     key: 'classification',
+    width: '108px',
   },
   {
     title: 'Types',
     dataIndex: 'types',
     key: 'types',
+    width: '108px',
   },
 ];
