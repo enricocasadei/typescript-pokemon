@@ -1,7 +1,6 @@
 import React from 'react';
 import { Checkbox, Row, Typography } from 'antd';
 import { PokemonType } from '../type';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 
 const radioStyle = {
   display: 'block',
