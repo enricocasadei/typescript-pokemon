@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 
 import classNames from 'classnames';
