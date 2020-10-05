@@ -7,26 +7,26 @@ import PokemonList from './List';
 import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';
 
-export default function ListController() {
-  const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
-
-  const GET_POKEMON = gql`
-    query pokemons($lastId: ID, $query: String, $type: [String]) {
-      pokemons(type: $type, q: $query, after: $lastId) {
-        edges {
-          node {
-            id
-            classification
-            name
-            types
-          }
-        }
-        pageInfo {
-          hasNextPage
+const GET_POKEMON = gql`
+  query pokemons($query: String, $type: [String]) {
+    pokemons(type: $type, q: $query) {
+      edges {
+        node {
+          id
+          classification
+          name
+          types
         }
       }
+      pageInfo {
+        hasNextPage
+      }
     }
-  `;
+  }
+`;
+
+export default function ListController() {
+  const [filter, setFilter] = useState<Filters>({ ...emptyFilter });
 
   const { loading, error, data } = useQuery<PokemonTableInfo>(GET_POKEMON, {
     variables: { ...filter },
@@ -57,13 +57,7 @@ export default function ListController() {
           </Row>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 20 }}>
-          <PokemonList
-            error={error}
-            loading={loading}
-            data={data}
-            hasNextPage={data?.pokemons.pageInfo.hasNextPage || false}
-            setLastId={(q: string) => setFilter({ ...filter, query: q })}
-          />
+          <PokemonList error={error} loading={loading} data={data} />
         </Col>
       </Row>
     </>
@@ -73,5 +67,4 @@ export default function ListController() {
 const emptyFilter = {
   type: [],
   query: '',
-  lastId: '',
 };

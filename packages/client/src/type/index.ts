@@ -1,3 +1,5 @@
+import { ColumnProps, TableProps } from 'antd/lib/table/interface';
+
 export interface Pokemon {
   node: {
     id: string;
@@ -47,5 +49,18 @@ export type PokemonTableInfo = {
 export type Filters = {
   type: PokemonType[];
   query: string;
-  lastId: string;
 };
+
+export interface VirtualColumnProps<T> extends ColumnProps<T> {
+  dataIndex: string;
+  width?: number;
+}
+
+export interface VirtualTableProps<T> extends TableProps<T> {
+  columns: VirtualColumnProps<T>[];
+  scroll: {
+    x?: string | number | boolean | undefined;
+    y: number;
+    scrollToFirstRowOnChange?: boolean | undefined;
+  };
+}

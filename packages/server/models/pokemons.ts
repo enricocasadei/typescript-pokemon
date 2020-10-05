@@ -13,33 +13,17 @@ interface Pokemon {
   types: string[];
 }
 
-const SIZE = 10;
-
 export function query(args: {
-  after?: string;
-  limit?: number;
   q?: string;
   type?: string[];
 }): Connection<Pokemon> {
-  const { after, q, limit = SIZE, type } = args;
+  const { q, type } = args;
 
   const filterByQ: (as: Pokemon[]) => Pokemon[] =
     // filter only if q is defined
     q === undefined
       ? identity
       : A.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
-
-  const sliceByAfter: (as: Pokemon[]) => Pokemon[] =
-    // filter only if q is defined
-    after === undefined
-      ? identity
-      : (as) =>
-          pipe(
-            as,
-            A.findIndex((a) => a.id === after),
-            O.map((a) => a + 1),
-            O.fold(() => as, (idx) => as.slice(idx))
-          );
 
   const filterByType: (as: Pokemon[]) => Pokemon[] =
     type === undefined || type.length === 0
@@ -53,10 +37,7 @@ export function query(args: {
   const results: Pokemon[] = pipe(
     data,
     filterByQ,
-    filterByType,
-    sliceByAfter,
-    // slicing limit + 1 because the `toConnection` function should known the connection size to determine if there are more results
-    slice(0, limit + 1)
+    filterByType
   );
-  return toConnection(results, limit);
+  return toConnection(results);
 }

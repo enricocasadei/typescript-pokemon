@@ -1,40 +1,18 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Table, Button, Popover } from 'antd';
+import React from 'react';
+import { Popover } from 'antd';
 import { Pokemon, PokemonRow } from '../type';
 import VirtualTable from './VirtualTable';
 
-export const PokemonTable = ({
-  data,
-  hasNextPage,
-  getLastId,
-}: {
-  data: Pokemon[];
-  hasNextPage?: boolean;
-  getLastId: (val: string) => void;
-}) => {
-  const [lastId, setLastId] = useState<string | undefined>();
-
-  useEffect(() => {
-    setLastId(data[data.length - 1].node.id);
-  }, [data]);
-
-  const emitLastId = useCallback(() => getLastId(lastId || ''), [lastId, getLastId]);
-
+export const PokemonTable = ({ data, loading }: { data: Pokemon[]; loading: boolean }) => {
   return (
-    <>
-      <VirtualTable<PokemonRow>
-        scroll={{ y: 456, x: '100vw' }}
-        pagination={false}
-        rowKey="name"
-        dataSource={data.map(mapToTable)}
-        columns={columns}
-      />
-      {hasNextPage && (
-        <div style={{ margin: '24px auto', textAlign: 'center' }}>
-          <Button onClick={emitLastId}>Load More</Button>
-        </div>
-      )}
-    </>
+    <VirtualTable<PokemonRow>
+      loading={loading}
+      scroll={{ y: 456, x: '100vw' }}
+      pagination={false}
+      rowKey="name"
+      dataSource={data.map(mapToTable)}
+      columns={columns}
+    />
   );
 };
 
@@ -51,7 +29,7 @@ const columns = [
     title: 'Sprite',
     dataIndex: 'sprite',
     key: 'sprite',
-    width: '66px',
+    width: 66,
     textAlign: 'center',
     render: (text: any, record: PokemonRow, index: number) => {
       return (
@@ -65,18 +43,18 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    width: '108px',
+    width: 108,
   },
   {
     title: 'Classification',
     dataIndex: 'classification',
     key: 'classification',
-    width: '108px',
+    width: 108,
   },
   {
     title: 'Types',
     dataIndex: 'types',
     key: 'types',
-    width: '108px',
+    width: 108,
   },
 ];
