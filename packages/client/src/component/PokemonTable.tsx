@@ -7,11 +7,12 @@ export const PokemonTable = ({ data, loading }: { data: Pokemon[]; loading: bool
   return (
     <VirtualTable<PokemonRow>
       loading={loading}
-      scroll={{ y: 456, x: '100vw' }}
+      scroll={{ y: 456, x: '80%' }}
       pagination={false}
       rowKey="name"
       dataSource={data.map(mapToTable)}
       columns={columns}
+      title={() => `Found ${data.length} Pokemon`}
     />
   );
 };
@@ -29,7 +30,7 @@ const columns = [
     title: 'Sprite',
     dataIndex: 'sprite',
     key: 'sprite',
-    width: 66,
+    width: 86,
     textAlign: 'center',
     render: (text: any, record: PokemonRow, index: number) => {
       return (
@@ -47,18 +48,19 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    width: 108,
+    sorter: (a: PokemonRow, b: PokemonRow) => a.name.localeCompare(b.name),
+    ellipsis: true,
   },
   {
     title: 'Classification',
     dataIndex: 'classification',
     key: 'classification',
-    width: 108,
+    sorter: (a: PokemonRow, b: PokemonRow) => a.classification.localeCompare(b.classification),
+    ellipsis: true,
   },
   {
     title: 'Types',
     dataIndex: 'types',
     key: 'types',
-    width: 108,
   },
 ];

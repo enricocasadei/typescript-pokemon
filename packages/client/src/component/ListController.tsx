@@ -35,28 +35,31 @@ export default function ListController() {
   return (
     <>
       <PageHeader title="Pokemon List" />
-      <Row gutter={[16, 16]}>
-        <Col xs={{ span: 24 }} md={{ span: 4 }}>
-          <Row className="margin-bottom-medium">
-            <SearchInput
-              value={filter.query}
-              set={(q?: string) => setFilter({ ...filter, query: q || '' })}
-              placeholder="Search by name"
-            />
-          </Row>
-          <Row className="margin-bottom-medium">
-            <CheckboxPokemonType
-              query={filter.type}
-              setQuery={(q: PokemonType[]) => setFilter({ ...filter, type: q })}
-            />
-          </Row>
-          <Row className="margin-bottom-medium">
-            <Button icon="undo" onClick={() => setFilter({ ...emptyFilter })}>
-              Reset Filters
-            </Button>
+      <Row style={{ width: '100%' }} gutter={[16, 16]}>
+        <Col md={4}>
+          <Row gutter={[16, 16]}>
+            <Col>
+              <Button icon="undo" onClick={() => setFilter({ ...emptyFilter })}>
+                Reset Filters
+              </Button>
+            </Col>
+
+            <Col>
+              <SearchInput
+                value={filter.query}
+                set={(q?: string) => setFilter({ ...filter, query: q || '' })}
+                placeholder="Search by name"
+              />
+            </Col>
+            <Col>
+              <CheckboxPokemonType
+                query={filter.type}
+                setQuery={(q: PokemonType[]) => setFilter({ ...filter, type: q })}
+              />
+            </Col>
           </Row>
         </Col>
-        <Col xs={{ span: 24 }} md={{ span: 20 }}>
+        <Col md={20}>
           <PokemonList error={error} loading={loading} data={data} />
         </Col>
       </Row>

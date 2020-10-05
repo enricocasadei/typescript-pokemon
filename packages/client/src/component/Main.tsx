@@ -11,7 +11,7 @@ export default function Main() {
     <BrowserRouter>
       <Layout className="layout">
         <PokemonHeader />
-        <Content style={{ margin: '24px', width: '100vw', height: '100vh' }}>
+        <Content style={{ margin: '24px' }}>
           <Routing />
         </Content>
       </Layout>
