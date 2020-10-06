@@ -1,6 +1,7 @@
 import { Row, Spin } from 'antd';
 import React, { Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import NotFound from '../component/NotFound';
 
 const ListController = React.lazy(() => import(/* webpackChunkName: "listing" */ '../component/ListController'));
 
@@ -9,6 +10,11 @@ export const Routing = () => (
     <Route exact path={'/'}>
       <Suspense fallback={<FallbackSpinner />}>
         <ListController />
+      </Suspense>
+    </Route>
+    <Route exact path={'*'}>
+      <Suspense fallback={<FallbackSpinner />}>
+        <NotFound />
       </Suspense>
     </Route>
   </Switch>
