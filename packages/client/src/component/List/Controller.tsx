@@ -18,9 +18,6 @@ const GET_POKEMON = gql`
           types
         }
       }
-      pageInfo {
-        hasNextPage
-      }
     }
   }
 `;
