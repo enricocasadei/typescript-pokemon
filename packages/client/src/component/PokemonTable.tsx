@@ -17,8 +17,10 @@ export const PokemonTable = ({ data, loading }: { data: Pokemon[]; loading: bool
         dataSource={data.map(mapToTable)}
         columns={columns}
         title={() => `Found ${data.length} Pokemon`}
-        onRowClick={record => {
-          setDrawer({ open: true, record });
+        onRow={record => {
+          return {
+            onClick: () => setDrawer({ open: true, record }),
+          };
         }}
       />
       <Drawer onClose={() => setDrawer({ open: false })} width={640} placement="right" visible={drawer.open}>
