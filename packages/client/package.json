@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/classnames": "^2.2.10",
     "@types/lodash": "^4.14.161",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-window": "^1.8.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",

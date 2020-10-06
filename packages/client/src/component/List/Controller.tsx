@@ -1,26 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { Row, Col, Button, PageHeader } from 'antd';
-import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Filters, PokemonTableInfo, PokemonType } from '../../type';
 import PokemonList from './List';
 import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';
-
-const GET_POKEMON = gql`
-  query pokemons($query: String, $type: [String]) {
-    pokemons(type: $type, q: $query) {
-      edges {
-        node {
-          id
-          classification
-          name
-          types
-        }
-      }
-    }
-  }
-`;
+import { GET_POKEMON } from '../../utils/gql';
 
 export default function ListController() {
   const [filter, setFilter] = useState<Filters>({ ...emptyFilter });

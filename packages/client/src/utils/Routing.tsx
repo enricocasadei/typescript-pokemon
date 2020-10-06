@@ -29,7 +29,7 @@ export const Routing = () => (
 );
 
 const FallbackSpinner = () => (
-  <Row justify="center" align="middle" style={{ textAlign: 'center' }}>
+  <Row justify="center" align="middle" style={{ textAlign: 'center', height: '100vh' }}>
     <Spin size="large" />
   </Row>
 );
