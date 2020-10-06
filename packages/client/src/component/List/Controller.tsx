@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Row, Col, Button, PageHeader } from 'antd';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
-import { Filters, PokemonTableInfo, PokemonType } from '../type';
+import { Filters, PokemonTableInfo, PokemonType } from '../../type';
 import PokemonList from './List';
 import { CheckboxPokemonType } from './CheckboxPokemonType';
 import { SearchInput } from './SearchInput';

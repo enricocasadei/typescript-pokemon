@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Drawer, Typography, Row, Col } from 'antd';
-import { Pokemon, PokemonRow } from '../type';
-import VirtualTable from './VirtualTable';
+import { Pokemon, PokemonRow } from '../../type';
+import VirtualTable from '../VirtualTable';
 
 const { Text } = Typography;
 

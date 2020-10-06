@@ -3,7 +3,7 @@ import React, { Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import NotFound from '../component/NotFound';
 
-const ListController = React.lazy(() => import(/* webpackChunkName: "listing" */ '../component/ListController'));
+const ListController = React.lazy(() => import(/* webpackChunkName: "listing" */ '../component/List/Controller'));
 
 export const Routing = () => (
   <Switch>

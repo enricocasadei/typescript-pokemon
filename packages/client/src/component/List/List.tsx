@@ -1,9 +1,9 @@
 import React from 'react';
 import { ApolloError } from '@apollo/client/errors';
-import { ErrorAlert } from './ErrorAlert';
+import { ErrorAlert } from '../ErrorAlert';
 import { NoPokemonFound } from './NoPokemonFound';
 import { PokemonTable } from './PokemonTable';
-import { PokemonTableInfo } from '../type';
+import { PokemonTableInfo } from '../../type';
 
 type PokemonListProps = {
   error: ApolloError | undefined;
