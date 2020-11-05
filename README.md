@@ -1,4 +1,4 @@
-# Assignment
+# Instruction
 
-After installing, to start the frontend at http://localhost:3000/ use yarn start-client
-while to start the backend at http://localhost:4000/ use yarn start-server
+After installing, start the project with `yarn start` or `npm start` which will run `concurrently -r yarn:start-client yarn:start-server`.
+The client will run at https://localhost:9000/ while the server at http://localhost:4000/
